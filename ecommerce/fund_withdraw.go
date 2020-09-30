@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"ptapp.cn/util/wechat.v3/core"
-	"ptapp.cn/util/wechat.v3/dto"
+	"wxpay.v3/core"
+	"wxpay.v3/dto"
 )
 
 func (c *payClient) WithdrawFund(req *dto.WithdrawFundReq) (*dto.WithdrawFundResp, error) {

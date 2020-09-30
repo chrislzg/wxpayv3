@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang/glog"
 
-	"ptapp.cn/util/wechat.v3/core"
+	"wxpay.v3/core"
 )
 
 const CertificationType = "WECHATPAY2-SHA256-RSA2048"

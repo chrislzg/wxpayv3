@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"ptapp.cn/util/wechat.v3/core"
-	"ptapp.cn/util/wechat.v3/dto"
+	"wxpay.v3/core"
+	"wxpay.v3/dto"
 )
 
 // 合单支付

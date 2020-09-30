@@ -10,8 +10,8 @@ import (
 
 	"github.com/golang/glog"
 
-	"ptapp.cn/util/wechat.v3/core"
-	"ptapp.cn/util/wechat.v3/dto"
+	"wxpay.v3/core"
+	"wxpay.v3/dto"
 )
 
 type payClient struct {

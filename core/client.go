@@ -3,7 +3,7 @@ package core
 import (
 	"net/http"
 
-	"ptapp.cn/util/wechat.v3/dto"
+	"wxpay.v3/dto"
 )
 
 type ApiCert struct {

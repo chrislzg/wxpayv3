@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"ptapp.cn/util/wechat.v3/core"
-	"ptapp.cn/util/wechat.v3/dto"
+	"wxpay.v3/core"
+	"wxpay.v3/dto"
 )
 
 func (c *payClient) Refund(req *dto.RefundReq) (*dto.RefundResp, error) {

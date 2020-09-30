@@ -12,7 +12,7 @@ import (
 
 	"github.com/golang/glog"
 
-	"ptapp.cn/util/wechat.v3/core"
+	"wxpay.v3/core"
 )
 
 func (c *payClient) VerifyNotify(header *http.Header, body []byte) error {
