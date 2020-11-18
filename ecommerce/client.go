@@ -86,7 +86,16 @@ func (c *payClient) doRequest(requestData interface{}, url string, httpMethod st
 	if err != nil {
 		return nil, err
 	}
-	resp, err := core.SimpleRequest(c.httpClient, url, httpMethod, authorization, data)
+	// 重试3次，避免因网络原因导致失败
+	retryTimes := 3
+	var resp *http.Response
+	for i := 0; i < retryTimes; i++ {
+		resp, err = core.SimpleRequest(c.httpClient, url, httpMethod, authorization, data)
+		if err != nil {
+			continue
+		}
+		break
+	}
 	if err != nil {
 		return nil, err
 	}
