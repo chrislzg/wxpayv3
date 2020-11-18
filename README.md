@@ -4,7 +4,7 @@
 The v3 version of WeChat Pay, implemented in GO language
 
 ## Install
-`go get -v github.com/chrislzg/wxpay.v3`
+`go get -v github.com/chrislzg/wxpayv3`
 
 ## Initialize
 ```go
