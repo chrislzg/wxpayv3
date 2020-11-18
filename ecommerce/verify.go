@@ -12,7 +12,7 @@ import (
 
 	"github.com/golang/glog"
 
-	"wxpay.v3/core"
+	"github.com/chrislzg/wxpayv3/core"
 )
 
 func (c *payClient) VerifyNotify(header *http.Header, body []byte) error {

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"wxpay.v3/core"
-	"wxpay.v3/dto"
+	"github.com/chrislzg/wxpayv3/core"
+	"github.com/chrislzg/wxpayv3/dto"
 )
 
 func (c *payClient) ProfitSharing(req *dto.ProfitSharingReq) (*dto.ProfitSharingResp, error) {

@@ -1,4 +1,4 @@
-module wxpay.v3
+module github.com/chrislzg/wxpayv3
 
 go 1.14
 

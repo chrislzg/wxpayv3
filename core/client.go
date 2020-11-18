@@ -3,7 +3,7 @@ package core
 import (
 	"net/http"
 
-	"wxpay.v3/dto"
+	"github.com/chrislzg/wxpayv3/dto"
 )
 
 type ApiCert struct {

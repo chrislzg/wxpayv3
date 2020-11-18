@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"wxpay.v3/core"
-	"wxpay.v3/dto"
+	"github.com/chrislzg/wxpayv3/core"
+	"github.com/chrislzg/wxpayv3/dto"
 )
 
 // 合单支付

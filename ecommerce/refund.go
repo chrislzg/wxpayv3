@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"wxpay.v3/core"
-	"wxpay.v3/dto"
+	"github.com/chrislzg/wxpayv3/core"
+	"github.com/chrislzg/wxpayv3/dto"
 )
 
 func (c *payClient) Refund(req *dto.RefundReq) (*dto.RefundResp, error) {

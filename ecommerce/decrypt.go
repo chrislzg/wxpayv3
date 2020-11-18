@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang/glog"
 
-	"wxpay.v3/core"
+	"github.com/chrislzg/wxpayv3/core"
 )
 
 func (c *payClient) Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error) {

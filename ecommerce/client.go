@@ -10,8 +10,8 @@ import (
 
 	"github.com/golang/glog"
 
-	"wxpay.v3/core"
-	"wxpay.v3/dto"
+	"github.com/chrislzg/wxpayv3/core"
+	"github.com/chrislzg/wxpayv3/dto"
 )
 
 type payClient struct {
