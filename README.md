@@ -26,6 +26,7 @@ func Test() (core.Client,error) {
         ApiPrivateKeyStr: "${apiPrivateKey}",
         ApiCertKey:       "${apiPublickCert}",
     },
+    // 该项是可选项，获取平台证书前可不填
     PlatCert: &core.PlatformCert{
         PlatformSerialNo: "${PlatformSerialNo}",
         PlatformCertKey:  "${platformPublicCert}",
@@ -45,6 +46,8 @@ func Test() (core.Client,error) {
 Authorization(httpMethod string, urlString string, body []byte) (string, error)
 // 获取签名信息
 Token(httpMethod string, rawUrl string, body []byte) (string, error)
+// 更新平台证书,获取到证书后调用该方法更新平台证书
+UpdatePlatformCert(cert *PlatformCert) error
 // 合单支付
 CombineTransactions(req *dto.CombineTransactionsReq) (*dto.CombineTransactionsResp, error)
 // 提现
@@ -80,6 +83,8 @@ BuildTurnUpPaymentArgumentBody(tradeType dto.TradeType, prepayId string) (string
 // 查询分账状态
 QueryProfitSharingStatus(req *dto.QueryProfitSharingStatusReq) (*dto.QueryProfitSharingStatusResp, error)
 ```
+## Platform Certification
+在获取平台证书前，初始化client可先不传`PlatCert`配置，调用`Certificate()`获取平台证书后，调用`UpdatePlatformCert`方法更新client的证书
 
 ## Contact
 `email: lzg635935643@qq.com`
