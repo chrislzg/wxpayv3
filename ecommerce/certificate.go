@@ -1,8 +1,11 @@
 package ecommerce
 
 import (
+	"crypto/rsa"
 	"encoding/json"
 	"net/http"
+
+	"github.com/golang/glog"
 
 	"github.com/chrislzg/wxpayv3/core"
 	"github.com/chrislzg/wxpayv3/dto"
@@ -30,4 +33,17 @@ func (c *payClient) Certificate() (*dto.CertificateResp, error) {
 		data.DecryptCertificate = string(decryptCert)
 	}
 	return &resp, nil
+}
+func (c *payClient) UpdatePlatformCert(cert *core.PlatformCert) error {
+	if cert == nil || cert.PlatformCertKey == "" {
+		return core.ErrEmptyCert
+	}
+	platformCert, err := core.ParseCertification(cert.PlatformCertKey)
+	if err != nil {
+		glog.Errorf("Parse PlatformPublicKey failed privateKeyStr:%v, %v", cert.PlatformCertKey, err)
+		return err
+	}
+	c.platformPublicKey = platformCert.PublicKey.(*rsa.PublicKey)
+	c.platformSerialNo = cert.PlatformSerialNo
+	return nil
 }

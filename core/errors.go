@@ -17,6 +17,7 @@ var (
 	ErrEmptyNotifyResource       = errors.New("empty notify resource")
 	ErrDecryptFailed             = errors.New("decrypt failed")
 	ErrIncorrectResourceType     = errors.New("incorrect resource-type")
+	ErrEmptyCert                 = errors.New("empty cert")
 )
 
 type ErrResponseBody struct {

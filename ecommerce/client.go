@@ -37,11 +37,6 @@ func NewClient(conf *core.ClientConf) (core.Client, error) {
 		glog.Errorf("Parse ApiPublicKey failed PublicKeyStr:%v, %v", conf.ApiCert.ApiCertKey, err)
 		return nil, err
 	}
-	platformCert, err := core.ParseCertification(conf.PlatCert.PlatformCertKey)
-	if err != nil {
-		glog.Errorf("Parse PlatformPublicKey failed privateKeyStr:%v, %v", conf.PlatCert.PlatformCertKey, err)
-		return nil, err
-	}
 	httpClient := conf.HttpClient
 	if httpClient == nil {
 		httpClient = &http.Client{
@@ -60,17 +55,22 @@ func NewClient(conf *core.ClientConf) (core.Client, error) {
 		}
 	}
 
-	return &payClient{
-		appId:             conf.AppId,
-		mchId:             conf.MchId,
-		apiV3Key:          conf.ApiV3Key,
-		apiSerialNo:       conf.ApiCert.ApiSerialNo,
-		apiPrivateKey:     apiPrivateKey,
-		apiPublicKey:      apiCert.PublicKey.(*rsa.PublicKey),
-		platformSerialNo:  conf.PlatCert.PlatformSerialNo,
-		platformPublicKey: platformCert.PublicKey.(*rsa.PublicKey),
-		httpClient:        httpClient,
-	}, nil
+	c := &payClient{
+		appId:         conf.AppId,
+		mchId:         conf.MchId,
+		apiV3Key:      conf.ApiV3Key,
+		apiSerialNo:   conf.ApiCert.ApiSerialNo,
+		apiPrivateKey: apiPrivateKey,
+		apiPublicKey:  apiCert.PublicKey.(*rsa.PublicKey),
+		httpClient:    httpClient,
+	}
+	if conf.PlatCert != nil {
+		err = c.UpdatePlatformCert(conf.PlatCert)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return c, nil
 }
 
 func (c *payClient) doRequest(requestData interface{}, url string, httpMethod string) ([]byte, error) {

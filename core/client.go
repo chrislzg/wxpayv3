@@ -21,7 +21,7 @@ type ClientConf struct {
 	MchId      string
 	ApiV3Key   string
 	ApiCert    *ApiCert
-	PlatCert   *PlatformCert
+	PlatCert   *PlatformCert // 可选项，在开始没有平台证书的时候可以不设置，当获取到以后重新设置
 	HttpClient *http.Client
 }
 type Client interface {
@@ -29,6 +29,8 @@ type Client interface {
 	Authorization(httpMethod string, urlString string, body []byte) (string, error)
 	// 获取签名信息
 	Token(httpMethod string, rawUrl string, body []byte) (string, error)
+	// 更新平台证书,获取到证书后调用该方法更新平台证书
+	UpdatePlatformCert(cert *PlatformCert) error
 	// 合单支付
 	CombineTransactions(req *dto.CombineTransactionsReq) (*dto.CombineTransactionsResp, error)
 	// 提现
