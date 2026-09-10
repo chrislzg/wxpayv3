@@ -14,6 +14,14 @@ type PartnerAmount struct {
 	Currency string `json:"currency,omitempty"` // 货币类型，CNY：人民币
 }
 
+// 查询订单返回金额
+type QueryOrderAmount struct {
+	Total         int64  `json:"total"`            // 订单总金额，单位为分
+	PayerTotal    int64  `json:"payer_total"`      // 用户支付金额，单位为分
+	Currency      string `json:"currency,omitempty"` // 货币类型，CNY：人民币
+	PayerCurrency string `json:"payer_currency,omitempty"` // 用户币种
+}
+
 // 普通支付者信息
 type PartnerPayerInfo struct {
 	SpOpenid  string `json:"sp_openid,omitempty"`  // 用户在服务商AppID下的唯一标识
@@ -108,7 +116,7 @@ type QueryOrderResp struct {
 	BankType       string            `json:"bank_type,omitempty"`       // 银行类型
 	Attach         string            `json:"attach,omitempty"`          // 附加数据
 	SuccessTime    time.Time         `json:"success_time,omitempty"`    // 支付完成时间
-	Amount         *PartnerAmount    `json:"amount,omitempty"`          // 订单金额
+	Amount         *QueryOrderAmount `json:"amount,omitempty"`          // 订单金额
 	Payer          *PartnerPayerInfo `json:"payer,omitempty"`          // 支付者信息
 	SceneInfo      *PartnerSceneInfo `json:"scene_info,omitempty"`      // 场景信息
 }

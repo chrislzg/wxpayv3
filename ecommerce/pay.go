@@ -2,6 +2,8 @@ package ecommerce
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 
@@ -24,6 +26,8 @@ func (c *payClient) PartnerTransactions(req *dto.PartnerTransactionsReq) (*dto.P
 		url = core.BuildUrl(nil, nil, core.ApiPartnerTransactionH5)
 	case dto.TradeTypeNative:
 		url = core.BuildUrl(nil, nil, core.ApiPartnerTransactionNative)
+	default:
+		return nil, errors.New("unsupported trade type: " + fmt.Sprint(req.TradeType))
 	}
 	body, err := c.doRequest(req, url, http.MethodPost)
 	if err != nil {
