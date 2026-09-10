@@ -118,3 +118,38 @@ type ProfitSharingStatusReceiver struct {
 	FailReason    string    `json:"fail_reason"`    // 分账失败原因，枚举值： ACCOUNT_ABNORMAL：分账接收账户异常 NO_RELATION：分账关系已解除
 	FinishTime    time.Time `json:"finish_time"`    // 分账完成时间，遵循rfc3339标准格式，格式为YYYY-MM-DDTHH:mm:ss:sss+TIMEZONE，YYYY-MM-DD表示年月日，T出现在字符串中，表示time元素的开头，HH:mm:ss:sss表示时分秒毫秒，TIMEZONE表示时区（+08:00表示东八区时间，领先UTC 8小时，即北京时间）。例如：2015-05-20T13:29:35.120+08:00表示，北京时间2015年5月20日 13点29分35秒。
 }
+
+// 查询分账回退请求
+type QueryReturnProfitSharingReq struct {
+	SubMchid     string // 二级商户号
+	OrderId      string // 微信分账单号，与OutOrderNo二选一
+	OutOrderNo   string // 商户系统内部的分账单号，与OrderId二选一
+	OutReturnNo  string // 商户回退单号，与ReturnNo二选一
+	ReturnNo     string // 微信分账回退单号，与OutReturnNo二选一
+}
+
+// 添加分账接收方请求
+type AddProfitSharingReceiverReq struct {
+	SubMchid    string          `json:"sub_mchid"`    // 二级商户号
+	Receiver    *ReceiverInfo   `json:"receiver"`     // 分账接收方信息
+}
+
+// 删除分账接收方请求
+type DeleteProfitSharingReceiverReq struct {
+	SubMchid    string          `json:"sub_mchid"`    // 二级商户号
+	Receiver    *ReceiverInfo   `json:"receiver"`     // 分账接收方信息
+}
+
+// 分账接收方信息
+type ReceiverInfo struct {
+	Type        string `json:"type"`         // 接收方类型，MERCHANT_ID：商户ID PERSONAL_WECHATID：个人微信号 PERSONAL_OPENID：个人openid PERSONAL_SUB_OPENID：个人sub_openid
+	Account     string `json:"account"`      // 接收方账号 1、类型是MERCHANT_ID时，是商户ID 2、类型是PERSONAL_WECHATID时，是个人微信号 3、类型是PERSONAL_OPENID时，是个人openid 4、类型是PERSONAL_SUB_OPENID时，是个人sub_openid
+	Name        string `json:"name,omitempty"` // 接收方名称，类型是MERCHANT_ID时，是商户名称 类型是PERSONAL_WECHATID时，是个人微信号 类型是PERSONAL_OPENID时，是个人openid对应的名称 类型是PERSONAL_SUB_OPENID时，是个人sub_openid对应的名称
+	RelationType string `json:"relation_type"` // 与分账方的关系类型，枚举值：PARTNER：合作伙伴 EMPLOYEE：员工 USER：用户 SUPPLIER：供应商 DISTRIBUTOR：分销商
+}
+
+// 添加/删除分账接收方返回结果
+type ProfitSharingReceiverResp struct {
+	Type    string `json:"type"`     // 接收方类型
+	Account string `json:"account"`  // 接收方账号
+}

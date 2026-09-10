@@ -82,6 +82,30 @@ HandleRefundNotify(headerSerial string, headerSignature string, headerTimestamp 
 BuildTurnUpPaymentArgumentBody(tradeType dto.TradeType, prepayId string) (string, error)
 // 查询分账状态
 QueryProfitSharingStatus(req *dto.QueryProfitSharingStatusReq) (*dto.QueryProfitSharingStatusResp, error)
+// 普通支付下单（支持JSAPI/APP/H5/Native/小程序）
+PartnerTransactions(req *dto.PartnerTransactionsReq) (*dto.PartnerTransactionsResp, error)
+// 按微信订单号查询订单
+QueryOrderById(req *dto.QueryOrderByIdReq) (*dto.QueryOrderResp, error)
+// 按商户订单号查询订单
+QueryOrderByOutTradeNo(req *dto.QueryOrderByOutTradeNoReq) (*dto.QueryOrderResp, error)
+// 关闭订单
+CloseOrder(req *dto.CloseOrderReq) error
+// 按微信退款单号查询退款
+QueryRefundById(req *dto.QueryRefundByIdReq) (*dto.QueryRefundResp, error)
+// 按商户退款单号查询退款
+QueryRefundByOutRefundNo(req *dto.QueryRefundByOutRefundNoReq) (*dto.QueryRefundResp, error)
+// 查询分账回退
+QueryReturnProfitSharing(req *dto.QueryReturnProfitSharingReq) (*dto.ReturnProfitSharingResp, error)
+// 添加分账接收方
+AddProfitSharingReceiver(req *dto.AddProfitSharingReceiverReq) (*dto.ProfitSharingReceiverResp, error)
+// 删除分账接收方
+DeleteProfitSharingReceiver(req *dto.DeleteProfitSharingReceiverReq) (*dto.ProfitSharingReceiverResp, error)
+// 请求补差
+Subsidy(req *dto.SubsidyReq) (*dto.SubsidyResp, error)
+// 查询补差
+QuerySubsidy(req *dto.QuerySubsidyReq) (*dto.SubsidyResp, error)
+// 补差回退
+ReturnSubsidy(req *dto.ReturnSubsidyReq) (*dto.ReturnSubsidyResp, error)
 ```
 ## Platform Certification
 在获取平台证书前，初始化client可先不传`PlatCert`配置，调用`Certificate()`获取平台证书后，调用`UpdatePlatformCert`方法更新client的证书

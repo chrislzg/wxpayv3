@@ -25,6 +25,10 @@ func (c *payClient) CombineTransactions(req *dto.CombineTransactionsReq) (*dto.C
 		url = core.BuildUrl(nil, nil, core.ApiCombinedTransactionApp)
 	case dto.TradeTypeJsApi, dto.TradeTypeXCX:
 		url = core.BuildUrl(nil, nil, core.ApiCombinedTransactionJsApi)
+	case dto.TradeTypeH5:
+		url = core.BuildUrl(nil, nil, core.ApiCombinedTransactionH5)
+	case dto.TradeTypeNative:
+		url = core.BuildUrl(nil, nil, core.ApiCombinedTransactionNative)
 	}
 	body, err := c.doRequest(req, url, http.MethodPost)
 	if err != nil {
