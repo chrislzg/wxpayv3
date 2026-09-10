@@ -15,6 +15,6 @@ type CertificateData struct {
 	EncryptCertificate *EncryptCertificate `json:"encrypt_certificate"`
 	DecryptCertificate string              `json:"decrypt_certificate"`
 	SerialNo           string              `json:"serial_no"`
-	EffectiveTime      time.Time           `json:"effective_time "`
-	ExpireTime         time.Time           `json:"expire_time "`
+	EffectiveTime      time.Time           `json:"effective_time"`
+	ExpireTime         time.Time           `json:"expire_time"`
 }

@@ -60,10 +60,6 @@ func (a *TurnUpPaymentArgumentApp) SetPaySign(privateKey *rsa.PrivateKey) error 
 	if err := bw.Flush(); err != nil {
 		return err
 	}
-	err := bw.Flush()
-	if err != nil {
-		return err
-	}
 	paySign, err := Sign(bf.Bytes(), privateKey)
 	if err != nil {
 		return err

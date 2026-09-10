@@ -34,12 +34,12 @@ func (c *payClient) Token(httpMethod string, rawUrl string, body []byte) (string
 	timestamp := time.Now().Unix()
 	message, err := core.BuildMessage(httpMethod, rawUrl, body, nonce, timestamp)
 	if err != nil {
-		glog.Errorf("buildMessage failed, httpMethod:%v, url:%v, body:%v, nonce:%v, %v", httpMethod, rawUrl, body, nonce, err)
+		glog.Errorf("buildMessage failed, httpMethod:%v, url:%v, %v", httpMethod, rawUrl, err)
 		return "", err
 	}
 	signature, err := c.Sign(message)
 	if err != nil {
-		glog.Errorf("sign failed, message:%v, %v", message, err)
+		glog.Errorf("sign failed: %v", err)
 		return "", err
 	}
 	return fmt.Sprintf(`mchid="%s",nonce_str="%s",signature="%s",timestamp="%v",serial_no="%s"`, c.mchId, nonce, signature, timestamp, c.apiSerialNo), nil

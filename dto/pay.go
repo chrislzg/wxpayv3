@@ -127,3 +127,44 @@ type CloseOrderReq struct {
 	SpMchid    string `json:"sp_mchid"`  // 服务商户号
 	SubMchid   string `json:"sub_mchid"` // 子商户号
 }
+
+// 直连商户支付者信息
+type PayerInfo struct {
+	Openid string `json:"openid"` // 用户在AppID下的唯一标识
+}
+
+// 直连商户下单请求
+type TransactionsReq struct {
+	TradeType      TradeType          `json:"-"`
+	Appid          string             `json:"appid"`                       // 直连商户AppID
+	Mchid          string             `json:"mchid"`                       // 直连商户号
+	Description    string             `json:"description"`                 // 商品描述
+	OutTradeNo     string             `json:"out_trade_no"`                // 商户订单号
+	TimeExpire     string             `json:"time_expire,omitempty"`       // 支付结束时间
+	Attach         string             `json:"attach,omitempty"`            // 附加数据
+	NotifyUrl      string             `json:"notify_url"`                 // 通知地址
+	GoodsTag       string             `json:"goods_tag,omitempty"`        // 订单优惠标记
+	SettleInfo     *SettleInfo        `json:"settle_info,omitempty"`       // 结算信息
+	SupportFapiao  bool               `json:"support_fapiao,omitempty"`    // 电子发票入口开放标识
+	Amount         *PartnerAmount     `json:"amount"`                      // 订单金额
+	Payer          *PayerInfo         `json:"payer,omitempty"`             // 支付者信息，JSAPI/小程序必填
+	Detail         *DetailInfo        `json:"detail,omitempty"`            // 商品详情
+	SceneInfo      *PartnerSceneInfo  `json:"scene_info,omitempty"`       // 场景信息
+}
+
+// 直连商户查询订单返回结果
+type QueryOrderRespDirect struct {
+	Appid          string            `json:"appid"`                       // 直连商户AppID
+	Mchid          string            `json:"mchid"`                       // 直连商户号
+	OutTradeNo     string            `json:"out_trade_no"`                // 商户订单号
+	TransactionId  string            `json:"transaction_id"`              // 微信支付订单号
+	TradeType      string            `json:"trade_type"`                  // 交易类型
+	TradeState     string            `json:"trade_state"`                 // 交易状态
+	TradeStateDesc string            `json:"trade_state_desc"`            // 交易状态描述
+	BankType       string            `json:"bank_type,omitempty"`         // 银行类型
+	Attach         string            `json:"attach,omitempty"`            // 附加数据
+	SuccessTime    time.Time         `json:"success_time,omitempty"`      // 支付完成时间
+	Amount         *QueryOrderAmount `json:"amount,omitempty"`           // 订单金额
+	Payer          *PayerInfo        `json:"payer,omitempty"`            // 支付者信息
+	SceneInfo      *PartnerSceneInfo `json:"scene_info,omitempty"`        // 场景信息
+}

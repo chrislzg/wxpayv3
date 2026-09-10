@@ -4,16 +4,14 @@ import (
 	"bufio"
 	"bytes"
 	"crypto"
-	rand2 "crypto/rand"
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
-	"math/rand"
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 )
 
 /*
@@ -56,12 +54,9 @@ func BuildMessage(httpMethod string, urlString string, body []byte, nonceStr str
 
 // 生成随机字符串
 func NonceStr() string {
-	rand.Seed(time.Now().UnixNano())
 	byteLen := 16
 	randBytes := make([]byte, byteLen)
-	for i := 0; i < byteLen; i++ {
-		randBytes[i] = byte(rand.Intn(256))
-	}
+	_, _ = rand.Read(randBytes)
 	return hex.EncodeToString(randBytes)
 }
 
@@ -69,7 +64,7 @@ func NonceStr() string {
 func Sign(message []byte, privateKey *rsa.PrivateKey) (string, error) {
 	h := sha256.New()
 	h.Write(message)
-	signature, err := rsa.SignPKCS1v15(rand2.Reader, privateKey, crypto.SHA256, h.Sum(nil))
+	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, h.Sum(nil))
 	if err != nil {
 		return "", err
 	}

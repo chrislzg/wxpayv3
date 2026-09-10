@@ -37,6 +37,17 @@ const (
 	ApiPartnerTransactionQueryById          = "/v3/pay/partner/transactions/id/{transaction_id}"           // 按微信订单号查询订单
 	ApiPartnerTransactionQueryByOutTradeNo = "/v3/pay/partner/transactions/out-trade-no/{out_trade_no}"    // 按商户订单号查询订单
 	ApiPartnerTransactionClose  = "/v3/pay/partner/transactions/out-trade-no/{out_trade_no}/close" // 关闭订单
+	// 直连商户
+	ApiTransactionJsApi                 = "/v3/pay/transactions/jsapi"                                 // 直连JSAPI下单
+	ApiTransactionApp                   = "/v3/pay/transactions/app"                                   // 直连APP下单
+	ApiTransactionH5                    = "/v3/pay/transactions/h5"                                    // 直连H5下单
+	ApiTransactionNative                = "/v3/pay/transactions/native"                                 // 直连Native下单
+	ApiTransactionQueryById            = "/v3/pay/transactions/id/{transaction_id}"                   // 直连按微信订单号查询订单
+	ApiTransactionQueryByOutTradeNo    = "/v3/pay/transactions/out-trade-no/{out_trade_no}"            // 直连按商户订单号查询订单
+	ApiTransactionClose                = "/v3/pay/transactions/out-trade-no/{out_trade_no}/close"       // 直连关闭订单
+	ApiRefundDomestic                  = "/v3/refund/domestic/refunds"                                 // 直连退款
+	ApiRefundDomesticQueryById         = "/v3/refund/domestic/refunds/{refund_id}"                     // 直连按微信退款单号查询退款
+	ApiRefundDomesticQueryByOutRefundNo = "/v3/refund/domestic/refunds/out-refund-no/{out_refund_no}" // 直连按商户退款单号查询退款
 )
 
 // @param params url中的path，例:/v3/ecommerce/fund/withdraw/{withdraw_id}中的{withdraw_id}

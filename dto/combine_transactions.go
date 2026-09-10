@@ -52,7 +52,7 @@ type CombineTransactionsReq struct {
 	TradeType         TradeType         `json:"-"`
 	SceneInfo         *SceneInfo        `json:"scene_info,omitempty"`         // 支付场景信息描述
 	CombinePayerInfo  *CombinePayerInfo `json:"combine_payer_info,omitempty"` // 非必填，App支付没有OpenId所以该字段不传
-	CombineAppid      string            `json:"combine_appid" `               // 该字段在URL中传参
+	CombineAppid      string            `json:"combine_appid"`                // 该字段在URL中传参
 	CombineMchid      string            `json:"combine_mchid"`                // 合单发起方商户号
 	CombineOutTradeNo string            `json:"combine_out_trade_no"`         // 合单支付总订单号，要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一
 	TimeStart         string            `json:"time_start,omitempty"`         // 订单生成时间，遵循rfc3339标准格式，格式为YYYY-MM-DDTHH:mm:ss+TIMEZONE，YYYY-MM-DD表示年月日，T出现在字符串中，表示time元素的开头，HH:mm:ss表示时分秒，TIMEZONE表示时区（+08:00表示东八区时间，领先UTC 8小时，即北京时间）。例如：2015-05-20T13:29:35+08:00表示，北京时间2015年5月20日 13点29分35秒。

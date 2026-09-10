@@ -16,13 +16,19 @@ type PlatformCert struct {
 	PlatformCertKey  string
 }
 
+type WechatPayPublicKey struct {
+	PublicKeyId string
+	PublicKey   string
+}
+
 type ClientConf struct {
-	AppId      map[dto.TradeType]string // App平台的AppId
-	MchId      string
-	ApiV3Key   string
-	ApiCert    *ApiCert
-	PlatCert   *PlatformCert // 可选项，在开始没有平台证书的时候可以不设置，当获取到以后重新设置
-	HttpClient *http.Client
+	AppId              map[dto.TradeType]string // App平台的AppId
+	MchId              string
+	ApiV3Key           string
+	ApiCert            *ApiCert
+	PlatCert           *PlatformCert // 可选项，在开始没有平台证书的时候可以不设置，当获取到以后重新设置
+	WechatPayPublicKey *WechatPayPublicKey // 可选项，微信支付公钥（新方案），优先于平台证书
+	HttpClient         *http.Client
 }
 type Client interface {
 	/// 获取签名Authorization，由认证类型和签名信息组成
@@ -67,6 +73,8 @@ type Client interface {
 	QueryProfitSharingStatus(req *dto.QueryProfitSharingStatusReq) (*dto.QueryProfitSharingStatusResp, error)
 	// 普通支付下单
 	PartnerTransactions(req *dto.PartnerTransactionsReq) (*dto.PartnerTransactionsResp, error)
+	// 直连商户下单
+	Transactions(req *dto.TransactionsReq) (*dto.PartnerTransactionsResp, error)
 	// 按微信订单号查询订单
 	QueryOrderById(req *dto.QueryOrderByIdReq) (*dto.QueryOrderResp, error)
 	// 按商户订单号查询订单

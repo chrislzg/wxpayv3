@@ -140,7 +140,7 @@ func (c *payClient) BuildTurnUpPaymentArgumentBody(tradeType dto.TradeType, prep
 	}
 	err := argument.SetPaySign(c.apiPrivateKey)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	argumentBody, err := json.Marshal(argument)
 	if err != nil {

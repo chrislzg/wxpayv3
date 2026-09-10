@@ -16,11 +16,14 @@ func (c *payClient) Decrypt(algorithm string, cipherText string, associatedData 
 	default:
 		fallthrough
 	case core.AlgorithmAEADAES256GCM:
-		decodedCipherText, _ := base64.StdEncoding.DecodeString(cipherText)
+		decodedCipherText, err := base64.StdEncoding.DecodeString(cipherText)
+		if err != nil {
+			return nil, err
+		}
 
 		block, err := aes.NewCipher([]byte(c.apiV3Key))
 		if err != nil {
-			glog.Errorf("invalid key:%v, %v", c.apiV3Key, err)
+			glog.Errorf("invalid apiV3Key: %v", err)
 			return nil, err
 		}
 

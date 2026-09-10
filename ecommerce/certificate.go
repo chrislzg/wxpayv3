@@ -40,7 +40,7 @@ func (c *payClient) UpdatePlatformCert(cert *core.PlatformCert) error {
 	}
 	platformCert, err := core.ParseCertification(cert.PlatformCertKey)
 	if err != nil {
-		glog.Errorf("Parse PlatformPublicKey failed privateKeyStr:%v, %v", cert.PlatformCertKey, err)
+		glog.Errorf("Parse PlatformPublicKey failed: %v", err)
 		return err
 	}
 	c.platformPublicKey = platformCert.PublicKey.(*rsa.PublicKey)

@@ -24,7 +24,17 @@ func (c *payClient) Refund(req *dto.RefundReq) (*dto.RefundResp, error) {
 
 func (c *payClient) enrichRefundReq(req *dto.RefundReq) *dto.RefundReq {
 	if req.SpAppid == "" {
-		req.SpAppid = c.appId[req.TradeType]
+		if appid, ok := c.appId[req.TradeType]; ok && appid != "" {
+			req.SpAppid = appid
+		} else {
+			// TradeType 未显式设置时，遍历取第一个可用 appId 作为 fallback
+			for _, appid := range c.appId {
+				if appid != "" {
+					req.SpAppid = appid
+					break
+				}
+			}
+		}
 	}
 	return req
 }

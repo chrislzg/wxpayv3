@@ -3,7 +3,7 @@ package ecommerce
 import (
 	"crypto/rsa"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"time"
@@ -15,26 +15,28 @@ import (
 )
 
 type payClient struct {
-	appId             map[dto.TradeType]string //appId
-	mchId             string                   // 商户号
-	apiV3Key          string                   // apiV3密钥
-	apiSerialNo       string                   // API证书序列号
-	apiPrivateKey     *rsa.PrivateKey          // API证书私钥
-	apiPublicKey      *rsa.PublicKey           // API公钥
-	platformSerialNo  string                   // 平台证书序列号
-	platformPublicKey *rsa.PublicKey           // 平台证书公钥
-	httpClient        *http.Client
+	appId                map[dto.TradeType]string //appId
+	mchId                string                   // 商户号
+	apiV3Key             string                   // apiV3密钥
+	apiSerialNo          string                   // API证书序列号
+	apiPrivateKey        *rsa.PrivateKey          // API证书私钥
+	apiPublicKey         *rsa.PublicKey           // API公钥
+	platformSerialNo     string                   // 平台证书序列号
+	platformPublicKey    *rsa.PublicKey           // 平台证书公钥
+	wechatPayPublicKeyId string                   // 微信支付公钥ID
+	wechatPayPublicKey   *rsa.PublicKey           // 微信支付公钥
+	httpClient           *http.Client
 }
 
 func NewClient(conf *core.ClientConf) (core.Client, error) {
 	apiPrivateKey, err := core.ParsePrivateKey(conf.ApiCert.ApiPrivateKeyStr)
 	if err != nil {
-		glog.Errorf("Parse ApiPrivateKey failed privateKeyStr:%v, %v", conf.ApiCert.ApiPrivateKeyStr, err)
+		glog.Errorf("Parse ApiPrivateKey failed: %v", err)
 		return nil, err
 	}
 	apiCert, err := core.ParseCertification(conf.ApiCert.ApiCertKey)
 	if err != nil {
-		glog.Errorf("Parse ApiPublicKey failed PublicKeyStr:%v, %v", conf.ApiCert.ApiCertKey, err)
+		glog.Errorf("Parse ApiPublicKey failed: %v", err)
 		return nil, err
 	}
 	httpClient := conf.HttpClient
@@ -70,6 +72,14 @@ func NewClient(conf *core.ClientConf) (core.Client, error) {
 			return nil, err
 		}
 	}
+	if conf.WechatPayPublicKey != nil {
+		wpk, err := core.ParsePublicKey(conf.WechatPayPublicKey.PublicKey)
+		if err != nil {
+			return nil, err
+		}
+		c.wechatPayPublicKey = wpk
+		c.wechatPayPublicKeyId = conf.WechatPayPublicKey.PublicKeyId
+	}
 	return c, nil
 }
 
@@ -82,14 +92,16 @@ func (c *payClient) doRequest(requestData interface{}, url string, httpMethod st
 			return nil, err
 		}
 	}
-	authorization, err := c.Authorization(httpMethod, url, data)
-	if err != nil {
-		return nil, err
-	}
-	// 重试3次，避免因网络原因导致失败
+	// 重试3次，避免因网络原因导致失败；每次重试重新生成 authorization 防止签名时间戳过期
 	retryTimes := 3
 	var resp *http.Response
+	var err error
 	for i := 0; i < retryTimes; i++ {
+		var authorization string
+		authorization, err = c.Authorization(httpMethod, url, data)
+		if err != nil {
+			return nil, err
+		}
 		resp, err = core.SimpleRequest(c.httpClient, url, httpMethod, authorization, data)
 		if err != nil {
 			continue
@@ -100,7 +112,7 @@ func (c *payClient) doRequest(requestData interface{}, url string, httpMethod st
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

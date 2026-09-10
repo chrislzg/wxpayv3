@@ -9,6 +9,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/golang/glog"
 
@@ -24,7 +26,7 @@ func (c *payClient) VerifyNotify(header *http.Header, body []byte) error {
 }
 
 func (c *payClient) VerifyResponse(httpStatus int, header *http.Header, body []byte) error {
-	if httpStatus != http.StatusOK && httpStatus != http.StatusNoContent {
+	if httpStatus < 200 || httpStatus >= 300 {
 		if body == nil {
 			return core.ErrInvalidResponse
 		}
@@ -90,11 +92,22 @@ func (c *payClient) buildVerificationString(timestamp string, nonce string, body
 func (c *payClient) verifySignature(signature string, verificationStr []byte) error {
 	h := sha256.New()
 	h.Write(verificationStr)
-	return rsa.VerifyPKCS1v15(c.platformPublicKey, crypto.SHA256, h.Sum(nil), []byte(signature))
+	var pub *rsa.PublicKey
+	if c.wechatPayPublicKey != nil {
+		pub = c.wechatPayPublicKey
+	} else {
+		pub = c.platformPublicKey
+	}
+	return rsa.VerifyPKCS1v15(pub, crypto.SHA256, h.Sum(nil), []byte(signature))
 }
 
 func (c *payClient) verify(headerSerial string, headerSignature string, headerTimestamp string, headerNonce string, body []byte) error {
-	if headerSerial != c.platformSerialNo {
+	if c.wechatPayPublicKeyId != "" {
+		if headerSerial != c.wechatPayPublicKeyId {
+			glog.Error("wechatPaySerial:", headerSerial)
+			return core.ErrInvalidWechatPaySerial
+		}
+	} else if headerSerial != c.platformSerialNo {
 		glog.Error("wechatPaySerial:", headerSerial)
 		return core.ErrInvalidWechatPaySerial
 	}
@@ -105,6 +118,14 @@ func (c *payClient) verify(headerSerial string, headerSignature string, headerTi
 		return core.ErrInvalidWechatPayTimestamp
 	case headerNonce == "":
 		return core.ErrInvalidWechatPayNonce
+	}
+	// 回调时间戳窗口校验，防重放（官方建议 5 分钟内）
+	ts, err := strconv.ParseInt(headerTimestamp, 10, 64)
+	if err != nil {
+		return core.ErrInvalidWechatPayTimestamp
+	}
+	if diff := time.Now().Unix() - ts; diff > 300 || diff < -300 {
+		return core.ErrInvalidWechatPayTimestamp
 	}
 	verificationStr, err := c.buildVerificationString(headerTimestamp, headerNonce, body)
 	if err != nil {

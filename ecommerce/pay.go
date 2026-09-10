@@ -93,3 +93,43 @@ func (c *payClient) CloseOrder(req *dto.CloseOrderReq) error {
 	_, err := c.doRequest(req, core.BuildUrl(params, nil, core.ApiPartnerTransactionClose), http.MethodPost)
 	return err
 }
+
+// 直连商户下单
+// 支持JSAPI、APP、H5、Native、小程序支付
+// JSAPI/APP/小程序返回prepay_id，H5返回h5_url，Native返回code_url
+func (c *payClient) Transactions(req *dto.TransactionsReq) (*dto.PartnerTransactionsResp, error) {
+	req = c.enrichTransactionsReq(req)
+	var url string
+	switch req.TradeType {
+	case dto.TradeTypeApp:
+		url = core.BuildUrl(nil, nil, core.ApiTransactionApp)
+	case dto.TradeTypeJsApi, dto.TradeTypeXCX:
+		url = core.BuildUrl(nil, nil, core.ApiTransactionJsApi)
+	case dto.TradeTypeH5:
+		url = core.BuildUrl(nil, nil, core.ApiTransactionH5)
+	case dto.TradeTypeNative:
+		url = core.BuildUrl(nil, nil, core.ApiTransactionNative)
+	default:
+		return nil, errors.New("unsupported trade type: " + fmt.Sprint(req.TradeType))
+	}
+	body, err := c.doRequest(req, url, http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
+	var ret dto.PartnerTransactionsResp
+	err = json.Unmarshal(body, &ret)
+	if err != nil {
+		return nil, err
+	}
+	return &ret, nil
+}
+
+func (c *payClient) enrichTransactionsReq(req *dto.TransactionsReq) *dto.TransactionsReq {
+	if req.Appid == "" {
+		req.Appid = c.appId[req.TradeType]
+	}
+	if req.Mchid == "" {
+		req.Mchid = c.mchId
+	}
+	return req
+}
