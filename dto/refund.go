@@ -92,3 +92,30 @@ type RefundNotifyResp struct {
 	*RefundNotify
 	Decryption *RefundNotifyDecryption `json:"decryption"`
 }
+
+// 查询退款请求（按微信退款单号）
+type QueryRefundByIdReq struct {
+	RefundId string // 微信退款单号
+	SubMchid string // 子商户号
+}
+
+// 查询退款请求（按商户退款单号）
+type QueryRefundByOutRefundNoReq struct {
+	OutRefundNo string // 商户退款单号
+	SubMchid    string // 子商户号
+}
+
+// 查询退款返回结果
+type QueryRefundResp struct {
+	RefundId            string             `json:"refund_id"`         // 微信退款单号
+	OutRefundNo         string             `json:"out_refund_no"`     // 商户退款单号
+	TransactionId       string             `json:"transaction_id,omitempty"` // 微信支付订单号
+	OutTradeNo          string             `json:"out_trade_no,omitempty"` // 商户订单号
+	Channel             string             `json:"channel,omitempty"` // 退款渠道
+	UserReceivedAccount string             `json:"user_received_account,omitempty"` // 退款入账账户
+	RefundStatus        string             `json:"refund_status"`     // 退款状态，枚举值：SUCCESS：退款成功 CLOSED：退款关闭 PROCESSING：退款中 ABNORMAL：退款异常
+	SuccessTime         time.Time          `json:"success_time,omitempty"` // 退款成功时间
+	CreateTime          time.Time          `json:"create_time,omitempty"` // 退款创建时间
+	Amount              *RefundAmountInfo  `json:"amount"`            // 金额信息
+	PromotionDetail     []*PromotionDetail `json:"promotion_detail,omitempty"` // 优惠退款信息
+}

@@ -3,6 +3,7 @@ package ecommerce
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -25,6 +26,12 @@ func (c *payClient) CombineTransactions(req *dto.CombineTransactionsReq) (*dto.C
 		url = core.BuildUrl(nil, nil, core.ApiCombinedTransactionApp)
 	case dto.TradeTypeJsApi, dto.TradeTypeXCX:
 		url = core.BuildUrl(nil, nil, core.ApiCombinedTransactionJsApi)
+	case dto.TradeTypeH5:
+		url = core.BuildUrl(nil, nil, core.ApiCombinedTransactionH5)
+	case dto.TradeTypeNative:
+		url = core.BuildUrl(nil, nil, core.ApiCombinedTransactionNative)
+	default:
+		return nil, errors.New("unsupported trade type: " + fmt.Sprint(req.TradeType))
 	}
 	body, err := c.doRequest(req, url, http.MethodPost)
 	if err != nil {

@@ -9,6 +9,8 @@ const (
 	TradeTypeApp
 	TradeTypeJsApi
 	TradeTypeXCX
+	TradeTypeH5
+	TradeTypeNative
 )
 
 // 支付通知event_type字段常量值,具体值
